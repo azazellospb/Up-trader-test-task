@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid lightgrey;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  padding: 0.5rem;
+}
+
+.controlsBox {
+  display: flex;
+  justify-content: space-between;  
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.title {
+  font-family: 'Russo One', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 2px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.description {
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-align: justify;
+  letter-spacing: 1px;
+}
+
+.borderActiveStyle {
+  border: 2px solid greenyellow;
+}
+
+.CustomBtn {
+  padding: 3px;
+  border-radius: 0.5rem;
+  border: 2px dashed black;
+}
+
+.CustomBtn:hover {
+  box-shadow: 3px 3px 3px gray;
+}
+.CustomBtn:active {
+  box-shadow: 1px 1px 3px rgb(105, 105, 105);
+  transform: scale(0.999);
+}
+
+

@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+.headerBox {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2rem;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2.5rem;
+  letter-spacing: 3px;
+}
+.CustomBtn {
+  padding: 3px;
+  border-radius: 0.5rem;
+  border: 2px dashed black;
+}
+
+.CustomBtn:hover {
+  box-shadow: 3px 3px 3px gray;
+}
+.CustomBtn:active {
+  box-shadow: 1px 1px 3px rgb(105, 105, 105);
+  transform: scale(0.999);
+}

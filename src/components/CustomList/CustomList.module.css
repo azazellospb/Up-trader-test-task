@@ -1,0 +1,45 @@
+.CustomBtn {
+  padding: 3px;
+  border-radius: 0.5rem;
+  border: 2px dashed black;
+}
+
+.CustomBtn:hover {
+  box-shadow: 3px 3px 3px gray;
+}
+.CustomBtn:active {
+  box-shadow: 1px 1px 3px rgb(105, 105, 105);
+  transform: scale(0.999);
+}
+
+.listBox {
+  display: flex;
+  flex-direction: column;
+  padding: 0.3rem;
+  border: 1px solid gray;
+}
+
+.listBox p {
+  margin: 0;
+}
+
+.fileListItem,
+.subtaskControls,
+.subtaskInfo {
+  gap: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fileListItem {
+  width: 100%;
+}
+
+.subtaskInfo {
+  width: 60%;
+  padding: 0.3rem 1rem;
+}
+
+.subtaskInfo p {
+  margin: 0;
+}

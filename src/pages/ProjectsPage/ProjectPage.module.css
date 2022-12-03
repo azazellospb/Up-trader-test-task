@@ -1,0 +1,22 @@
+.projectsPageContainer {
+  background-color: #d3e7ff;
+}
+
+.projectsMainWindow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  box-shadow: 3px 5px 15px black;
+  gap: 3rem;
+  padding: 3rem;
+  background-color: white;
+  width: 75%;
+  margin: 10vh auto 3vh auto;
+}
+
+.projectList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
