@@ -13,14 +13,12 @@ export const Header = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const params = useParams();
-  console.log(params);
   const isProject = location.pathname === '/projects';
   const projects = useSelector((state: IRootState) => state.projectReducer.projects);
   let current;
   current = !isProject ? projects.find((project: any) => project.id === params.project) : undefined;
   let isDone = false;
   isDone = !isProject ? current?.status === 'done' : isDone;
-  console.log(isDone);
   const itemId = `new${isProject ? 'project' : 'task'}`
   return (
     <header className={styles.headerBox}>

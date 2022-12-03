@@ -24,6 +24,16 @@ export const projectReducer = (state = defaultState, action: any) => {
       return {...state, projects: action.payload, lastProjectIdNumber: lastProjectID};
     case DELETE_PROJECT:
       return { ...state, projects: [...state.projects.filter(project => project.id !== action.payload)]};
+    case UPDATE_PROJECT:
+      const updateProjectsIndex = state.projects.findIndex((projects => projects.id === action.payload.itemId));
+      const newValue = {...state.projects[updateProjectsIndex], ...action.payload.form}
+      const projects = [...state.projects]
+      projects[updateProjectsIndex] = newValue
+      return {...state, projects};
+    case CREATE_PROJECT:
+      const projectsArr = [...state.projects];
+      projectsArr.push(action.payload);
+      return {...state, projects: projectsArr};  
     default:
       return state;
   }

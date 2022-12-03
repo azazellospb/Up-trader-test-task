@@ -187,7 +187,6 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
         <CustomButton 
           style={styles.CustomBtn}
           handleClick={() => {
-            console.log(isNewItem, isNewProject);
             !isNewItem ? dispatch(isProject ? updateProject({ itemId, form }) : updateTask({ itemId, form }))
             : dispatch(isNewProject ? createProject({ ...form, number: freeIdNumber, id: 'project' + freeIdNumber }) : createTask({ ...form, number: freeIdNumber, projectid: projectId, id: 'task' + freeIdNumber }));
             (isNewTask || isTask) && dispatch(fetchTasks(projectId));

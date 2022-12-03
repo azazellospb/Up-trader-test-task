@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { fetchProjects } from './../store/projectReducer';
 import {put, takeEvery, call} from "redux-saga/effects"
 import { TProjectBrief } from "../pages/ProjectsPage";
@@ -8,14 +7,14 @@ import { supabase } from "../supabaseClient";
 // Fetch projects
 
 
-const getProjectsFromDB = async () => await supabase
+const getProjectsFromDB = async () =>  await supabase
 .from('projects')
-.select();
+.select('*');
 
 function* fetchProjectWorker(): any {
   const { data } = yield call(getProjectsFromDB)
-    const json = yield call(() => new Promise(res => res(data)))
-    yield put(setProjects(json))
+  const json = yield call(() => new Promise(res => res(data)));
+  yield put(setProjects(json));
 }
 
 export function* projectWatcher() {

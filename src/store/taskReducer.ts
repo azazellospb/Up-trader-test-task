@@ -56,9 +56,9 @@ export const taskReducer = (state = initialState, action: any) => {
     case UPDATE_TASK:
       const updateTaskIndex = state.tasks.findIndex((task => task.id === action.payload.itemId));
       const newValue = {...state.tasks[updateTaskIndex], ...action.payload.form}
-      const subtasks = [...state.tasks]
-      subtasks[updateTaskIndex] = newValue
-      return {...state, tasks: subtasks};
+      const tasks = [...state.tasks]
+      tasks[updateTaskIndex] = newValue
+      return {...state, tasks: tasks};
     case DELETE_ALL_SUBTASKS: 
       return {...state, subtasks: []};
     default:

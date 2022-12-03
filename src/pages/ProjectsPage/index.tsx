@@ -17,17 +17,17 @@ export type TProjectBrief = {
 }
 
 export const ProjectsPage = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchProjects());
     dispatch(deleteAllTask());
   }, [dispatch]);
-  const projects : TProjectBrief[] = useSelector((state: IRootState) => state.projectReducer.projects)
+  const projects : TProjectBrief[] = useSelector((state: IRootState) => state.projectReducer.projects);
   return (
     <div className={styles.projectsPageContainer}>
       <div className={styles.projectsMainWindow}>
         <div className={styles.projectList}>
-          {projects ? projects.map(project => <CustomRowItem key={project.id} item={project} />) : (<div>Пока нет проектов</div>)}
+          {!!projects.length ? projects.map(project => <CustomRowItem key={project.id} item={project} />) : (<div>У Вас пока нет проектов!</div>)}
         </div>
       </div>
     </div>

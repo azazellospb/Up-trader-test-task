@@ -29,7 +29,7 @@ export const CustomRowItem = ({ item}: TCustomRowItem) => {
   const navigate = useNavigate();
   const itemId = item.id;
   const isDone = item.status === 'done'
-  console.log(item.title, isDone);
+  const form = {status: 'done'}
   return (
     <div className={classNames([styles.container, isDone && styles.projectDoneStyle])}>
       <div className={styles.infoBox}>
@@ -38,8 +38,6 @@ export const CustomRowItem = ({ item}: TCustomRowItem) => {
           <p className={styles.title}>{item.title}</p>
           {!isDone ? (
             <CustomButton style={styles.CustomBtn} handleClick={()=> {
-              const itemId = item.id
-              const form = {status: 'done'}
               dispatch(updateProject({itemId, form}))
             }}>
               <DoneIcon />
