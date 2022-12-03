@@ -14,7 +14,7 @@ export const TasksPage = () => {
   return (
     <div>
       <div className={styles.header}>
-        <h1 className={styles.projectTitle}>{params.project}</h1>
+        <h1 className={styles.projectTitle}><>{'Текущий проект - '}{params.project}</></h1>
       </div>
       <Board />
     </div>  

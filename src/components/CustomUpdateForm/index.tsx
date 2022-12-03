@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ChangeEventHandler, useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { IRootState } from '../../store'
@@ -24,7 +24,8 @@ const initial:TTaskObject  = {
   priority: 'low',
   status: 'queue',
   id: '',
-  projectid: ''
+  // projectid: '',
+  number: 0
 }
 
 const subTaskInitinal = {
@@ -48,11 +49,20 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
   const projectId =  path.match(/[^/]*$/g)![0];
   const type  = String(itemId).match(/[A-Za-z]+/g) as RegExpMatchArray
   const key = !!type ? type[0] : '';
+  const creationData = form.created_at! ? new Date(form.created_at) : null;
+  const atWorkData = form.atWorkDate! ? new Date(form.atWorkDate) : null;
+  const completionData = form.completionDate! ? new Date(form.completionDate) : null;
+  const creationDataFormatted = creationData ? creationData!.toISOString().slice(0,10) : null;
+  const atWorkDataFormatted = atWorkData ? atWorkData.toISOString().slice(0,10) : null;
+  const completionDataFormatted = completionData ? completionData.toISOString().slice(0,10) : null;
+  const atWorkPeriod = atWorkData ? Math.abs((new Date()).getTime() - atWorkData!.getTime())/3600000 : 0;
   const isProject = key.includes('project');
   const isTask = key === 'task';
   const isNewProject = key === 'newproject'
-  const isNewTask = key === 'newtask'
+  const isNewTask = key === 'newtask';
   const isNewItem = key.includes('new');
+  const inProgress = form.atWorkDate && !Boolean(form.completionDate);
+  const isCompleted = Boolean(form.completionDate)
   const fileList = useSelector((state: IRootState) => state.fileReducer)
   const subTaskList = useSelector((state: IRootState) => state.taskReducer.subtasks)
   const itemArray = useSelector((state: IRootState) => {
@@ -73,11 +83,8 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
 
   useEffect(() => {
     dispatch(uploadFilesList(itemId));
-  }, [dispatch, state])
-
-  useEffect(() => {
     dispatch(fetchSubTasks(itemId));
-  }, [state])
+  }, [dispatch, state])
 
   useEffect(() => {
     const itemCard: any = itemArray.find((item: any) => item.id === itemId);
@@ -88,7 +95,7 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
   const getTitle = () => {
     if (isNewItem) {
       return <h2 className={styles.title}>Создать{' '}{isNewProject ? 'проект' : 'задачу'}</h2>
-    } else return <h2 className={styles.title}>Внести изменения в{' '}{isProject ? 'проект' : 'задачу'}</h2>
+    } else return <h2 className={styles.title}>Внести изменения в{' '}{isProject ? 'проект №' : 'задачу №'}{form.number}</h2>
   }
   
   const handleFileUpload = () => {
@@ -111,6 +118,10 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
     <div className={styles.updateFormBox}>
       {getTitle()}
       <form className={styles.updateForm}>
+        {!isNewItem && <p><>Дата создания задачи: {creationDataFormatted}</></p>}
+        {inProgress && <p><>В работе с: {atWorkDataFormatted}</></p>}
+        {inProgress && <p><>Время в работе: {atWorkPeriod < 1 ? 'Менее часа' : `${atWorkPeriod} часов`}</></p>}
+        {isCompleted && <p><>Дата окончания: {completionDataFormatted}</></p>}
         <InputBlock handleChange={(title:string) => setForm({...form, title})} initialValue={form.title} label={getLabel('Наименование')}/>
         <InputBlock tagName="textarea" handleChange={(description:string) => setForm({...form, description})} initialValue={form.description} label={getLabel('Описание')} />
         <InputBlock handleChange={(author: string) => setForm({...form, author})} initialValue={form.author} label={getLabel('Автор')}/>
@@ -118,8 +129,18 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
           <>
             <label>
               {getLabel('Статус')}
-              <select value={form.status} onChange={(event: any) => setForm({...form, status: event.target.value})} name="selectStatus">
-                <option value="queue" selected>В очереди</option>
+              <select 
+                value={form.status}
+                onChange={(event: any) => {
+                  const isRefreshed = form.status === 'done' && event.target.value !== 'done'
+                  const isTakenToWork = event.target.value === "development"
+                  const isFinished = event.target.value === "done"
+                  !isRefreshed && setForm({...form, completionDate: isFinished ? new Date() : null, atWorkDate: isTakenToWork ? new Date() : null, status: event.target.value})
+                  isRefreshed && setForm({...form, completionDate: null, atWorkDate: null, status: event.target.value})
+                }} 
+                name="selectStatus"
+              >
+                <option value="queue">В очереди</option>
                 <option value="development" >В разработке</option>
                 <option value="done">Выполнена</option>
               </select>
@@ -127,7 +148,7 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
             <label>
               {getLabel('Приоритет')}
               <select value={form.priority} onChange={(event:any) => setForm({...form, priority: event.target.value})} name="selectStatus">
-                <option value="low" selected>Низкий</option>
+                <option value="low">Низкий</option>
                 <option value="medium" >Средний</option>
                 <option value="high">Высокий</option>
               </select>
@@ -166,8 +187,9 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
         <CustomButton 
           style={styles.CustomBtn}
           handleClick={() => {
-            !isNewItem && dispatch(isProject ? updateProject({ itemId, form }) : updateTask({ itemId, form }));
-            isNewItem && dispatch(isNewProject ? createProject({ ...form, id: 'project' + freeIdNumber }) : createTask({ ...form, projectid: projectId, id: 'task' + freeIdNumber }));
+            console.log(isNewItem, isNewProject);
+            !isNewItem ? dispatch(isProject ? updateProject({ itemId, form }) : updateTask({ itemId, form }))
+            : dispatch(isNewProject ? createProject({ ...form, number: freeIdNumber, id: 'project' + freeIdNumber }) : createTask({ ...form, number: freeIdNumber, projectid: projectId, id: 'task' + freeIdNumber }));
             (isNewTask || isTask) && dispatch(fetchTasks(projectId));
             dispatch(fetchProjects());
             dispatch(fetchAllTasks(projectId));
@@ -183,7 +205,6 @@ export const CustomUpdateForm = ({ itemId } : TModalItem ) => {
           handleClick={() => {
           dispatch(hideModal());
           dispatch(deleteAllSubtasks());
-          setForm(initial);
           }}
         >
           <p>Выйти без изменений</p>

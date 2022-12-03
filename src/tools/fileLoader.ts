@@ -5,8 +5,6 @@ export const fileLoader = (url: string): void => {
       const blobUrl = window.URL.createObjectURL(xmlHttp.response);
       const e = document.createElement('a');
       e.href = blobUrl;
-      console.log(blobUrl);
-      console.log(e);
       e.download = blobUrl.substring(blobUrl.lastIndexOf('/') + 1);
       document.body.appendChild(e);
       e.click();

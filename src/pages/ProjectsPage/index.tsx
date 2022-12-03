@@ -11,6 +11,7 @@ export type TProjectBrief = {
   title: string,
   description: string,
   isActive: boolean,
+  status: string,
   creationDate?: Date,
   author?: string
 }

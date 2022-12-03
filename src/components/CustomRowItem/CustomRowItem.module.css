@@ -7,7 +7,7 @@
   border: 2px solid lightgrey;
   border-radius: 0.5rem;
   overflow: hidden;
-  padding: 0.5rem;
+  padding: 0 0.5rem 0.5rem 0.5rem;
 }
 
 .controlsBox {
@@ -51,6 +51,10 @@
 .CustomBtn:active {
   box-shadow: 1px 1px 3px rgb(105, 105, 105);
   transform: scale(0.999);
+}
+
+.projectDoneStyle {
+  border: 2px solid greenyellow;
 }
 
 

@@ -3,14 +3,14 @@ export type TTaskObject = {
   number?: number,
   title?: string,
   description?: string
-  creationDate?: Date,
-  inProgressPeriod?: string,
-  completionDate?: Date,
+  created_at?: Date,
+  completionDate?: Date | null,
   priority?: string,
   status: string,
   author?: string,
   parent?: string,
   projectid?: string,
+  atWorkDate?: Date | null,
 }
 
 export interface ITaskReducerState {
@@ -43,7 +43,6 @@ export const taskReducer = (state = initialState, action: any) => {
     case SET_TASKS:
       let taskArr: TTaskObject[] = []
       let subtaskArr: TTaskObject[] = []
-      
       let lastTaskID = action.payload.json.reduce((a:number, c: TTaskObject) => {
         if (c.projectid === action.payload.projectId && !c.id!.includes('subtask')) taskArr.push(c);
         if (c.projectid === action.payload.projectId && c.id!.includes('subtask')) subtaskArr.push(c);
@@ -54,6 +53,12 @@ export const taskReducer = (state = initialState, action: any) => {
       return {...state, subtasks: [...action.payload.json], lastTaskIdNumber: lastsubTaskID };
     case DELETE_ALL_TASKS: 
       return {...state, tasks: []};
+    case UPDATE_TASK:
+      const updateTaskIndex = state.tasks.findIndex((task => task.id === action.payload.itemId));
+      const newValue = {...state.tasks[updateTaskIndex], ...action.payload.form}
+      const subtasks = [...state.tasks]
+      subtasks[updateTaskIndex] = newValue
+      return {...state, tasks: subtasks};
     case DELETE_ALL_SUBTASKS: 
       return {...state, subtasks: []};
     default:

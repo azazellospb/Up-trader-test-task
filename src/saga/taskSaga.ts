@@ -13,7 +13,7 @@ const getTasksFromDB = async (projectId: string) => await supabase
 function* fetchTaskWorker(action: any): any {
     const { payload } = action;
     const projectId = payload;
-    const { data, error } = yield call(() => getTasksFromDB(payload))
+    const { data } = yield call(() => getTasksFromDB(payload))
     const json: TTaskObject[] = yield call(() => new Promise(res => res(data))) 
     yield put(setTasks({json, projectId}))
 }
@@ -31,8 +31,7 @@ const getAllTasksFromDB = async (projectId: string) => await supabase
 
 function* fetchAllTaskWorker(action: any): any {
     const projectId = action.payload;
-    console.log(action);
-    const { data, error } = yield call(() => getAllTasksFromDB(projectId))
+    const { data } = yield call(() => getAllTasksFromDB(projectId))
     const json = yield call(() => new Promise(res => res(data)))
     yield put(setTasks({ json, projectId } ))
 }
@@ -51,8 +50,7 @@ const getAllSubTasksFromDB = async (parentId: string) => await supabase
 
 function* fetchAllSubTaskWorker(action: any): any {
     const projectId = action.payload;
-    console.log('getSub Tasks: ', action);
-    const { data, error } = yield call(() => getAllSubTasksFromDB(projectId))
+    const { data } = yield call(() => getAllSubTasksFromDB(projectId))
     const json = yield call(() => new Promise(res => res(data)))
     yield put(setSubtasks({ json } ))
 }

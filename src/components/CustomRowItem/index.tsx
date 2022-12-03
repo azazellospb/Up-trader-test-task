@@ -8,11 +8,11 @@ import { OpenIcon } from '../icons/OpenIcon';
 import styles from './CustomRowItem.module.css';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { deleteProject } from '../../store/projectReducer';
+import { deleteProject, updateProject } from '../../store/projectReducer';
 import { showModal } from '../../store/modalReducer';
+import { ProjectDoneIcon } from '../icons/ProjectDoneIcon';
 
 type TCustomRowItem = {
-  style?: string;
   item: TDBItem;
 }
 
@@ -20,23 +20,32 @@ type TDBItem = {
   id: string;
   title: string;
   description: string;
-  isActive: boolean;
+  status: string;
 }
 
-export const CustomRowItem = ({style, item}: TCustomRowItem) => {
+export const CustomRowItem = ({ item}: TCustomRowItem) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const itemId = item.id;
+  const isDone = item.status === 'done'
+  console.log(item.title, isDone);
   return (
-    <div className={classNames([styles.container, !!style && style, item.isActive && styles.borderActiveStyle])}>
+    <div className={classNames([styles.container, isDone && styles.projectDoneStyle])}>
       <div className={styles.infoBox}>
+        
         <div className={styles.header}>
           <p className={styles.title}>{item.title}</p>
-          <CustomButton style={styles.CustomBtn} handleClick={()=> console.log('отработало')}>
-            <DoneIcon />
-            <p>Завершить</p>
-          </CustomButton>
+          {!isDone ? (
+            <CustomButton style={styles.CustomBtn} handleClick={()=> {
+              const itemId = item.id
+              const form = {status: 'done'}
+              dispatch(updateProject({itemId, form}))
+            }}>
+              <DoneIcon />
+              <p>Завершить</p>
+            </CustomButton>
+          ) : <ProjectDoneIcon />}
         </div>
         <p className={styles.description}>
           {item.description}
@@ -47,10 +56,10 @@ export const CustomRowItem = ({style, item}: TCustomRowItem) => {
           <OpenIcon />
           <p>Открыть</p>
         </CustomButton>
-        <CustomButton style={styles.CustomBtn} handleClick={() => dispatch(showModal(itemId))}>
+        {!isDone && <CustomButton style={styles.CustomBtn} handleClick={() => dispatch(showModal(itemId))}>
           <MakeChangesIcon />
           <p>Изменить</p>
-        </CustomButton>
+        </CustomButton>}
         <CustomButton style={styles.CustomBtn} handleClick={() => dispatch(deleteProject(item.id))}>
           <RemoveIcon />
           <p>Удалить</p>

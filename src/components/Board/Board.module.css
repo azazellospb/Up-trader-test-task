@@ -1,11 +1,3 @@
-.header {
-
-}
-
-.projectTitle {
-
-}
-
 .board {
   display: flex;
   justify-content: space-between;
@@ -33,4 +25,10 @@
 .boardColumn {
   display: flex;
   flex-direction: column;
+}
+
+.dropColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }

@@ -16,7 +16,7 @@ export const Board = () => {
   const [columns, setColumns] = useState<TTaskResult>({});
   useEffect(()=> {
     setColumns(groupedTaskArray)
-  }, [tasks])
+  }, [tasks]);
 
   const onDragEnd = (result: { result?: any; columns?: TTaskResult; setColumns?: React.Dispatch<React.SetStateAction<TTaskResult>>; destination?: any; source?: any; }, columns: { [x: string]: any; }, setColumns: { (value: React.SetStateAction<TTaskResult>): void; (arg0: any): void; }) => {
     if (!result.destination) return;
@@ -29,7 +29,17 @@ export const Board = () => {
       const destTasks = destColumn.tasks;
       const [movedTask] = sourceTask.splice(source.index, 1);
       destTasks.push(movedTask);
-      const form: TTaskObject = { status: destination.droppableId };
+      const form: TTaskObject = { status: destination.droppableId,  };
+      const isTakenToWork = form.status === "development"
+      const isFinished = form.status === "done"
+      const isRefreshed = form.status === "queue"
+      if (!isRefreshed) { 
+        form.completionDate = isFinished ? new Date() : null;
+        form.atWorkDate = isTakenToWork ? new Date() : null; 
+      } else if(isRefreshed) {
+        form.completionDate = null;
+        form.atWorkDate = null;
+      } 
       const itemId = movedTask.id;
       newState[source.droppableId].tasks = structuredClone(sourceTask);
       newState[destination.droppableId].tasks = structuredClone(destTasks);
@@ -50,24 +60,27 @@ export const Board = () => {
     }
   };
 
-
+  
+  
   return (
     <div className={styles.board}>
       <DragDropContext className={styles.boardWrapper}
         onDragEnd={(result: TOnDragEnd) => onDragEnd(result, columns, setColumns)}
       >
         {Object.entries(columns).map(([columnId, column], index) => {
+          const getBoardColumnTitle = (arg: string) => column.title === 'queue' ? 'Задачи в очереди' : column.title === 'done' ? 'Выполненные задачи' : 'В работе';
           return (
             <div
               className={styles.boardColumn}
               key={columnId}
-            >
-              <h2 className={styles.boardTitle}>{column.title}</h2>
+              >
+              <h2 className={styles.boardTitle}>{getBoardColumnTitle(column.title)}</h2>
               <div className={styles.boardZone}>
                 <Droppable droppableId={columnId} key={columnId}>
                   {(provided: { droppableProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; innerRef: React.LegacyRef<HTMLDivElement> | undefined; placeholder: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ReactFragment | React.ReactPortal | null | undefined; }, snapshot: { isDraggingOver: any; }) => {
                     return (
                       <div
+                        className={styles.dropColumn}
                         {...provided.droppableProps}
                         ref={provided.innerRef}
                       >
@@ -81,11 +94,12 @@ export const Board = () => {
                               {(provided: { innerRef: React.LegacyRef<HTMLDivElement> | undefined; draggableProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; dragHandleProps: JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>; }, snapshot: { isDragging: any; }) => {
                                 return (
                                   <div
+                                    
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                   >
-                                    <TaskItem className="sss" task={task}/>
+                                    <TaskItem className={styles.dropItem} task={task}/>
                                   </div>
                                 );
                               }}
