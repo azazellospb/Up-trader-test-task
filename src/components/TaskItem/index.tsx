@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React from 'react'
 import { useDispatch } from 'react-redux';
 import { uploadFilesList } from '../../store/fileReducer';
@@ -16,14 +17,15 @@ type TTaskItem = {
 export const TaskItem = ({task, className }: TTaskItem) => {
   const dispatch = useDispatch();
   const { status, title, id, description} = task;
+  const isHighPrity = task.priority === 'high';
+  const isMediumPrity = task.priority === 'medium';
   const itemId = id as string;
   return (
     <div className={className}>
-      <div draggable data-status={task.status} className={styles.taskBox} key={id}>
+      <div draggable data-status={status} className={classNames([styles.taskBox, isHighPrity && styles.highPriority, isMediumPrity && styles.mediumPriority ])} key={id}>
           <div className={styles.taskInfo}>
             <div className={styles.taskTitle}>{title}</div>
             <div>{description}</div>
-            <div>{status}</div>
           </div>
           <div className={styles.controls}>
             <CustomButton style={styles.CustomBtn} handleClick={() => {
@@ -32,7 +34,7 @@ export const TaskItem = ({task, className }: TTaskItem) => {
               dispatch(fetchSubTasks(itemId));
               }}>
               <OpenIcon />
-              <p>Открыть задачу</p>
+              <p>Открыть</p>
             </CustomButton>
             <CustomButton 
               style={styles.CustomBtn}
@@ -41,7 +43,7 @@ export const TaskItem = ({task, className }: TTaskItem) => {
                 dispatch(fetchTasks(task.projectid!));
               }}>
               <RemoveIcon />
-              <p>Удалить задачу</p>
+              <p>Удалить</p>
             </CustomButton>
           </div>
       </div>

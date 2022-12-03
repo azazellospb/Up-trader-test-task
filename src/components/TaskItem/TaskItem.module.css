@@ -1,11 +1,23 @@
 .taskBox {
   display: flex;
   flex-direction: column;
+  background-color: rgba(147, 255, 188, 0.671);
   gap: 2rem;
-  border: 2px solid green;
+  box-shadow: 3px 3px 10px rgba(27, 235, 138, 0.42);
   border-radius: 8px;
   cursor: grab;
 }
+
+.highPriority {
+  background-color: rgba(255, 172, 147, 0.671);
+  box-shadow: 3px 3px 10px rgba(235, 103, 27, 0.42);
+}
+
+.mediumPriority {
+  box-shadow: 3px 3px 10px rgb(235 204 27 / 42%);
+  background-color: rgba(244, 255, 147, 0.671);
+}
+
 
 .taskInfo {
   display: flex;
@@ -19,10 +31,26 @@
   border: 2px dashed black;
 }
 
-.CustomBtn:hover {
+.CustomBtn:hover,
+.taskBox:hover {
   box-shadow: 3px 3px 3px gray;
 }
-.CustomBtn:active {
+.CustomBtn:active,
+.taskBox:active {
   box-shadow: 1px 1px 3px rgb(105, 105, 105);
   transform: scale(0.999);
+}
+
+.controls {
+  display: flex;
+  padding: 0.3rem 0.5rem;
+  justify-content: space-between;
+}
+
+.taskTitle {
+  font-size: x-large;
+}
+
+.taskInfo {
+  padding: 0.5rem;
 }
